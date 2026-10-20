@@ -54,18 +54,50 @@ footer button{background:none;border:0;color:var(--sub);text-decoration:underlin
 .box{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px}
 .code{font:700 2.2rem "Bodoni Moda",serif;color:var(--brass);letter-spacing:4px}
 label.l{display:block;font-weight:600;margin:10px 0 4px}
+.net{position:sticky;top:0;z-index:20;display:flex;gap:12px;align-items:center;padding:12px 16px;background:var(--ink);color:var(--bg);border-bottom:3px solid var(--brass)}
+.net[hidden]{display:none}.net.off,.net.srv{border-bottom-color:var(--red)}
+.net .ic{font-size:1.7rem;line-height:1}.net div{flex:1}.net b{display:block}.net small{opacity:.85;display:block;line-height:1.35}
+.net button{border:1.5px solid var(--bg);background:transparent;color:var(--bg);border-radius:10px;padding:6px 12px;font-weight:700}
+.st{border-radius:14px;padding:12px 16px;margin:0 0 14px;border:2px solid #2E9E62;background:rgba(46,158,98,.14)}
+.st.closed{border-color:var(--red);background:rgba(179,32,46,.14)}.st b{display:block;font-size:1.05rem}.st span{color:var(--sub)}
+.box.wel{border-color:var(--brass);border-width:2px}
+.qk{border-color:var(--brass);border-width:2px}.qk input{margin-top:6px}
+.pvr{display:flex;gap:8px;margin:8px 0 4px}.pvb{flex:1;border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:6px 4px 4px;text-align:center}
+.pvb canvas{width:100%;height:auto;display:block}.pvb span{font-size:.8rem;color:var(--sub);font-weight:600}
+#zm{position:fixed;inset:0;background:var(--bg);z-index:30;display:none;overflow:auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 24px;text-align:center}#zm.on{display:block}
+#zc{width:min(88vw,380px);height:auto;touch-action:none;background:var(--card);border:2px solid var(--line);border-radius:18px;display:block;margin:12px auto}
+.zb{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}.zb .btn{min-width:84px;padding:10px 12px}
+.big{font-weight:800;font-size:1.1rem}
 </style>
 </head>
 <body>
 <div class="pole" aria-hidden="true"></div>
+<div id="net" class="net" role="alert" hidden></div>
+<script>
+(function(){var n=document.getElementById("net"),f={srv:0,slow:0};
+var T={off:["\u{1F4E1}","Oops! No internet","Your phone is offline. Switch on mobile data or Wi-Fi. Booking works again as soon as you\u2019re back."],srv:["\u{1F635}","Oops! Server not answering","Your network may be weak, or the shop server is having a hiccup. Please try again in a minute."],slow:["\u{1F422}","Network is slow","Still trying\u2026 hang tight!"]};
+function upd(){var k=!navigator.onLine?"off":f.srv?"srv":f.slow?"slow":"";if(!k){n.hidden=true;n.innerHTML="";return}
+var t=T[k];n.className="net "+k;n.innerHTML='<span class="ic" aria-hidden="true">'+t[0]+'</span><div><b>'+t[1]+'</b><small>'+t[2]+'</small></div>'+(k==="slow"?"":'<button type="button" id="rt">Retry</button>');n.hidden=false;
+var b=document.getElementById("rt");if(b)b.onclick=function(){location.reload()}}
+window.RCN={ok:false,set:function(a,v){f[a]=v;upd()}};
+addEventListener("online",upd);addEventListener("offline",upd);
+setTimeout(function(){if(!RCN.ok){f.slow=1;upd()}},8000);setTimeout(function(){if(!RCN.ok){f.srv=1;upd()}},20000);upd()})();
+</script>
 <main id="cust">
-  <h1>Rameshwar Cuts &amp; Co.</h1>
+  <section class="st open" id="st" aria-live="polite"></section>
+  <section class="box wel" id="wel" hidden></section>
+  <h1 id="h1">Rameshwar Cuts &amp; Co.</h1>
   <p class="sub">Sharp cuts. Honest price. Book your chair in under a minute.</p>
   <div class="meta">
-    <span class="pill">Open 9:00 AM – 5:00 PM</span>
-    <a class="pill" href="https://www.instagram.com/is_prince_24_1" target="_blank" rel="noopener">Instagram @is_prince_24_1</a>
+    <a class="pill" id="wa" hidden target="_blank" rel="noopener">WhatsApp</a>
+    <span class="pill" id="hrs">Open 9:00 AM – 5:00 PM</span>
+    <a class="pill" id="ig" href="https://www.instagram.com/is_prince_24_1" target="_blank" rel="noopener">Instagram @is_prince_24_1</a>
   </div>
-  <section class="box" id="wel" hidden></section>
+  <section class="box qk" id="qk"><strong>✂ Hair cutting — सीधा समय पाएँ</strong>
+    <p class="sub" style="margin:4px 0 6px">Don’t want to choose? Tap once and get your time. बस एक बटन दबाइए, आपका समय मिल जाएगा।</p>
+    <input type="text" id="qn" placeholder="Your name / अपना नाम" maxlength="40" autocomplete="name">
+    <p class="sub" id="qp" style="margin:6px 0 0"></p>
+    <button class="go" id="qb" style="margin-top:10px">Get my time / मेरा समय बताओ</button><p class="err" id="qe" role="alert"></p></section>
   <section class="banner" aria-live="polite"><b id="amt"></b><div><s id="old" hidden></s><small id="note"></small></div></section>
 
   <h2>Choose your cut</h2>
@@ -85,13 +117,20 @@ label.l{display:block;font-weight:600;margin:10px 0 4px}
   <p class="err" id="err" role="alert"></p>
 
   <section class="ticket" id="ticket" aria-live="polite"><div class="pole" aria-hidden="true"></div><div class="b">
-    <strong>Booking confirmed</strong><div class="tok" id="tok"></div>
+    <strong>Booking confirmed</strong><div class="tok" id="tok"></div><p class="big" id="thi" style="margin:4px 0 8px"></p>
     <dl><dt>Name</dt><dd id="tn"></dd><dt>Cut</dt><dd id="ts"></dd><dt>Options</dt><dd id="to"></dd><dt>Time</dt><dd id="tt"></dd><dt>Price</dt><dd id="tp"></dd></dl>
     <p class="sub" style="margin:10px 0 0">Show this token at the shop. Pay at the counter.</p></div></section>
 
-  <footer>Rameshwar Cuts &amp; Co. · Open daily 9:00 AM – 5:00 PM<br><button id="staffBtn">Staff login</button></footer>
+  <footer><span id="ft">Rameshwar Cuts &amp; Co. · Open daily 9:00 AM – 5:00 PM</span><br><button id="staffBtn">Staff login</button></footer>
 </main>
 
+<div id="zm" role="dialog" aria-modal="true" aria-label="Haircut preview">
+  <div class="bar"><strong id="zt">Preview</strong><button class="btn" id="zx">Close ✕</button></div>
+  <canvas id="zc" width="300" height="300" aria-label="Rotating head preview"></canvas>
+  <div class="zb"><button class="btn" data-v="0">Front</button><button class="btn" data-v="1">Side</button><button class="btn" data-v="2">Back</button><button class="btn" data-v="3">Top</button></div>
+  <div class="zb"><button class="btn" id="zin">＋ Zoom in</button><button class="btn" id="zout">－ Zoom out</button><button class="btn" id="zsp" aria-pressed="false">⟳ Auto-spin</button></div>
+  <p class="sub">Drag with your finger to turn the head. Pinch or use the buttons to zoom. This is a guide picture, not an exact photo.</p>
+</div>
 <div id="ov" role="dialog" aria-modal="true" aria-label="Staff area"><main id="ovm"></main></div>
 
 <script type="module">
@@ -184,13 +223,16 @@ const FIREBASE={apiKey:"AIzaSyApAvr8zq4mEy579PlvrFkzROgCwjJIwgA",authDomain:"cut
 /* 2) These two emails must match the users you create in Firebase Authentication */
 const OWNER_EMAIL="owner@rameshwar-cuts.app",STAFF_EMAIL="staff@rameshwar-cuts.app";
 const ready=!FIREBASE.apiKey.startsWith("PASTE");
-let db,auth,CFG={fest:false,pct:20,prices:{}},SLOT=[],BK=[];
+let db,auth,CFG={fest:false,pct:20,prices:{},name:"Rameshwar Cuts & Co.",insta:"is_prince_24_1",open:540,close:1020,gap:15,qp:50,wa:"",mode:"open",closedOn:"",msg:"",hidden:[]},SLOT=[],BK=[];
 const mem={};
 const S={get(k,d){try{const v=localStorage.getItem(k);if(v)return JSON.parse(v)}catch(e){}return k in mem?mem[k]:d},set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
-const SL=[];for(let m=540;m<=990;m+=30){const h=Math.floor(m/60),mi=m%60;SL.push((h>12?h-12:h)+":"+String(mi).padStart(2,"0")+(h>=12?" PM":" AM"))}
+const fmt=m=>{const h=Math.floor(m/60),mi=m%60;return (h>12?h-12:h)+":"+String(mi).padStart(2,"0")+(h>=12?" PM":" AM")};
+let SL=[];const buildSL=()=>{SL=[];for(let m=CFG.open;m<=CFG.close-CFG.gap;m+=CFG.gap)SL.push(fmt(m))};buildSL();
+const say=(id,t,ok)=>{const e=$(id);if(!e)return;e.style.color=ok?"var(--brass)":"";e.textContent=t};
 const day=()=>new Date().toLocaleDateString("en-CA");
+const isClosed=()=>CFG.mode==="hold"||(CFG.mode==="today"&&CFG.closedOn===day());
 const sid=t=>day()+"_"+t.replace(/[ :]/g,"");
 const mins=t=>{const [a,b]=t.split(" ");let [h,m]=a.split(":").map(Number);if(b==="PM"&&h!==12)h+=12;if(b==="AM"&&h===12)h=0;return h*60+m};
 const past=t=>{const n=new Date();return mins(t)<=n.getHours()*60+n.getMinutes()};
@@ -201,43 +243,169 @@ const base=n=>cfg().prices[n]??DP[n]??50;
 const me=()=>S.get("rc_me",null),favs=()=>S.get("rc_fav",[]);
 const priceFor=n=>{const c=cfg(),b=base(n),f=c.fest?Math.round(b*(100-c.pct)/100):b,m=me(),l=m&&m.locks?m.locks[n]:null;return l!=null?Math.min(f,l):f};
 const ALL=[];for(const k in STY)STY[k].forEach((s,i)=>ALL.push({...s,cat:k,i}));
+const hid=()=>Array.isArray(CFG.hidden)?CFG.hidden:[],VIS=()=>ALL.filter(s=>!hid().includes(s.n));
 const OPT={top:["Front & top",["Just a trim","Light","Regular","Short","Very short"],2],sides:["Sides",["Keep as is","Light trim","Short","Skin fade"],2],back:["Back",["Keep as is","Light trim","Short","Tapered","Skin fade"],3],fin:["Finish",["Natural","Neat","Textured","Slick"],0]};
 const optStr=o=>o?"Top: "+o.top+" · Sides: "+o.sides+" · Back: "+o.back+" · "+o.fin+(o.note?" · “"+o.note+"”":""):"";
 let cat="men",office=false,sel=null,slot=null,opt={note:""};for(const k in OPT)opt[k]=OPT[k][1][OPT[k][2]];
+/* ---------- 3D head preview (no libraries) ---------- */
+const clamp=(v,a,b)=>v<a?a:v>b?b:v,mixn=(a,b,t)=>a+(b-a)*t,sm=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+const SKINC=[201,143,102],HAIRC=[32,23,19];
+const TOPT={"Just a trim":.17,"Light":.14,"Regular":.105,"Short":.06,"Very short":.025};
+const SIDEO={"Keep as is":[.075,0],"Light trim":[.055,.2],"Short":[.035,.45],"Skin fade":[.014,1]};
+const BACKO={"Keep as is":[.075,0],"Light trim":[.055,.2],"Short":[.035,.45],"Tapered":[.03,.75],"Skin fade":[.014,1]};
+function look(h,o){const sd0=SIDEO[o.sides]||[.05,.2],bk0=BACKO[o.back]||[.05,.2];
+const P={top:TOPT[o.top]??.1,sd:sd0[0],sf:sd0[1],bk:bk0[0],bf:bk0[1],front:0,strip:0,all:0,hlS:.12,hlB:-.45,ex:[],fin:o.fin||"Natural",hawk:false};
+switch(h){
+case"buzz":P.top=.02;P.sd=.02;P.bk=.02;P.sf=Math.max(P.sf,.2);P.bf=Math.max(P.bf,.2);break;
+case"fade":P.sd=Math.min(P.sd,.02);P.sf=Math.max(P.sf,.85);P.bk=Math.min(P.bk,.02);P.bf=Math.max(P.bf,.85);break;
+case"pomp":P.front=.15;P.top=Math.max(P.top,.1);break;
+case"hawk":P.hawk=true;P.strip=.2;P.sd=.012;P.sf=1;P.bk=.012;P.bf=1;break;
+case"curly":P.top+=.08;break;
+case"afro":P.all=.2;break;
+case"long":P.top=Math.max(P.top,.1);P.hlS=-.9;P.hlB=-1.2;P.sd=P.bk=.1;P.sf=P.bf=0;P.ex.push([0,-.5,-.3,.98,1,.7]);break;
+case"bob":P.top=Math.max(P.top,.1);P.hlS=-.3;P.hlB=-.5;P.sd=P.bk=.1;P.sf=P.bf=0;P.ex.push([0,-.2,-.25,.96,.62,.72]);break;
+case"pixie":P.top=.06;P.front=.05;P.sd=.04;P.bk=.04;break;
+case"bun":P.top=Math.max(.05,P.top-.04);P.ex.push([0,1.03,-.42,.3,.3,.3]);break;
+case"pony":P.top=.06;P.ex.push([0,-.35,-1.05,.2,.75,.2]);break}
+return P}
+const SK=[0,0,0,.8,1,.9];
+function zoneOf(u,P){const y=u[1],aa=Math.abs(Math.atan2(u[0],u[2]));
+const hl=aa<.6?.44:aa<1.57?mixn(.44,P.hlS,(aa-.6)/.97):aa<2.6?mixn(P.hlS,P.hlB,(aa-1.57)/1.03):P.hlB;
+if(y<hl)return[0,hl];if(y>.44)return[1,hl];return[aa<2?2:3,hl]}
+function renderHead(W,H,P,rotY,pitch,zoom){const out=new Uint8ClampedArray(W*H*4);
+const cY=Math.cos(-rotY),sY=Math.sin(-rotY),cX=Math.cos(-pitch),sX=Math.sin(-pitch);
+const M=v=>{const y1=v[1]*cX-v[2]*sX,z1=v[1]*sX+v[2]*cX;return[v[0]*cY+z1*sY,y1,-v[0]*sY+z1*cY]};
+const D=M([0,0,-1]),Mx=M([1,0,0]),My=M([0,1,0]),Mz=M([0,0,1]);
+let L=M([.45,.75,.65]);const ll=Math.hypot(L[0],L[1],L[2]);L=L.map(v=>v/ll);
+const Hf=[L[0]-D[0],L[1]-D[1],L[2]-D[2]];const hh=Math.hypot(Hf[0],Hf[1],Hf[2]);Hf[0]/=hh;Hf[1]/=hh;Hf[2]/=hh;
+const S=H/3.1*zoom,y0=-.12+.22*(zoom-1),O=[0,0,0];
+const k=P.all,shells=[];
+const addS=(kk,acc)=>shells.push({sc:1+kk,acc});
+addS(P.sd+k,(u,z)=>z===2);addS(P.bk+k,(u,z)=>z===3);
+if(P.hawk){addS(P.top+P.strip+k,(u,z)=>z===1&&Math.abs(u[0])<.3);addS(.02,(u,z)=>z===1&&Math.abs(u[0])>=.3)}
+else{addS(P.top+k,(u,z)=>z===1);
+if(P.front>0){addS(P.top+k+P.front*.5,(u,z)=>z===1&&u[2]>-.1);addS(P.top+k+P.front,(u,z)=>z===1&&u[2]>.35)}}
+const noise=(x,y,z)=>{let n=Math.sin(x*127.1+y*311.7+z*74.7)*43758.5453;return n-Math.floor(n)};
+for(let py=0;py<H;py++)for(let px=0;px<W;px++){
+const wx=(px+.5-W/2)/S,wy=(H/2-py-.5)/S+y0;
+O[0]=wx*Mx[0]+wy*My[0]+6*Mz[0];O[1]=wx*Mx[1]+wy*My[1]+6*Mz[1];O[2]=wx*Mx[2]+wy*My[2]+6*Mz[2];
+let bt=1e9,kind=0,ne=null,hu=null,hz=0,alpha=1;
+const tryE=(e,sc,kd,chk)=>{const rx=e[3]*sc,ry=e[4]*sc,rz=e[5]*sc,ax=(O[0]-e[0])/rx,ay=(O[1]-e[1])/ry,az=(O[2]-e[2])/rz,dx=D[0]/rx,dy=D[1]/ry,dz=D[2]/rz;
+const a=dx*dx+dy*dy+dz*dz,b=ax*dx+ay*dy+az*dz,c=ax*ax+ay*ay+az*az-1,d=b*b-a*c;if(d<0)return;const t=(-b-Math.sqrt(d))/a;if(t<=0||t>=bt)return;
+const q=[O[0]+t*D[0],O[1]+t*D[1],O[2]+t*D[2]];const u=[(q[0]-e[0])/rx,(q[1]-e[1])/ry,(q[2]-e[2])/rz];const ul=Math.hypot(u[0],u[1],u[2]);const un=[u[0]/ul,u[1]/ul,u[2]/ul];
+let zz=0;if(chk){zz=zoneOf(un,P)[0];if(!chk(un,zz))return}
+bt=t;kind=kd;hu=un;hz=zz;ne=[(q[0]-e[0])/(rx*rx),(q[1]-e[1])/(ry*ry),(q[2]-e[2])/(rz*rz)]};
+tryE(SK,1,1);
+tryE([.8,-.06,-.05,.1,.25,.16],1,2);tryE([-.8,-.06,-.05,.1,.25,.16],1,2);
+tryE([0,-.12,.9,.1,.22,.17],1,2);
+for(const s of shells)tryE(SK,s.sc,3,s.acc);
+for(const e of P.ex)tryE(e,1,4);
+{const rx=.42,rz=.46,cz=-.05,ax=O[0]/rx,az=(O[2]-cz)/rz,dx=D[0]/rx,dz=D[2]/rz,a=dx*dx+dz*dz;
+if(a>1e-9){const b=ax*dx+az*dz,c=ax*ax+az*az-1,d=b*b-a*c;if(d>=0){const t=(-b-Math.sqrt(d))/a;if(t>0&&t<bt){const yy=O[1]+t*D[1];if(yy<-.55&&yy>-1.75){bt=t;kind=5;ne=[(O[0]+t*D[0])/(rx*rx),0,(O[2]+t*D[2]-cz)/(rz*rz)];alpha=sm(-1.75,-1.3,yy);hu=[0,yy,0]}}}}}
+if(bt>1e8)continue;
+const nl=Math.hypot(ne[0],ne[1],ne[2]);const N=[ne[0]/nl,ne[1]/nl,ne[2]/nl];
+let col;
+if(kind===1){const [z,hl]=zoneOf(hu,P);
+ if(z===0){col=SKINC;const e1=Math.hypot(Math.abs(hu[0])-.33,hu[1]-.12,hu[2]-.93);if(e1<.075)col=[40,28,24];else if(hu[2]>.8&&Math.abs(hu[1]+.5)<.022&&Math.abs(hu[0])<.2)col=[150,85,70]}
+ else col=null}
+else if(kind===2)col=[SKINC[0]*.96,SKINC[1]*.94,SKINC[2]*.92];
+else if(kind===5)col=[SKINC[0]*.85,SKINC[1]*.82,SKINC[2]*.8];
+else col=null;
+let hair=kind===3||kind===4||(kind===1&&col===null);
+if(hair){let c=HAIRC,z=hz;if(kind===1){z=zoneOf(hu,P)[0]}
+ if(kind===4)z=1;
+ if((z===2||z===3)&&kind!==4){const f=z===2?P.sf:P.bf;const hl=zoneOf(hu,P)[1];const yy=(hu[1]-hl)/Math.max(.05,.44-hl);const s=f>0?sm(0,1,1-yy/f):0;
+  const stub=[mixn(SKINC[0],HAIRC[0],.3),mixn(SKINC[1],HAIRC[1],.3),mixn(SKINC[2],HAIRC[2],.3)];c=[mixn(HAIRC[0],stub[0],s),mixn(HAIRC[1],stub[1],s),mixn(HAIRC[2],stub[2],s)]}
+ col=c}
+let dif=Math.max(0,N[0]*L[0]+N[1]*L[1]+N[2]*L[2]);let sh=.34+.72*dif;
+let r=col[0]*sh,g=col[1]*sh,b2=col[2]*sh;
+if(hair){const sp=Math.pow(Math.max(0,N[0]*Hf[0]+N[1]*Hf[1]+N[2]*Hf[2]),P.fin==="Slick"?28:9)*(P.fin==="Slick"?95:26);r+=sp;g+=sp;b2+=sp;
+ if(P.fin==="Textured"){const nz=.82+.36*noise(Math.floor((O[0]+bt*D[0])*22),Math.floor((O[1]+bt*D[1])*22),Math.floor((O[2]+bt*D[2])*22));r*=nz;g*=nz;b2*=nz}}
+const i=(py*W+px)*4;out[i]=r;out[i+1]=g;out[i+2]=b2;out[i+3]=alpha*255}
+return out}
+
 /* ---------- customer ---------- */
-function price(){const c=cfg();$("amt").textContent="From ₹"+Math.min(...ALL.map(s=>priceFor(s.n)));$("old").hidden=true;
+function price(){const c=cfg();$("amt").textContent="From ₹"+Math.min(...(VIS().length?VIS():[{n:""}]).map(s=>priceFor(s.n)));$("old").hidden=true;
 $("note").textContent=c.fest?"Festival offer: "+c.pct+"% off every cut":"Fair prices, shown on every style"}
-function welcome(){const m=me(),w=$("wel");if(!m){w.hidden=true;return}w.hidden=false;const p=priceFor(m.style);
-w.innerHTML=`<strong>Welcome back, ${esc(m.name)}</strong><p class="sub" style="margin:4px 0 10px">Your usual: ${esc(m.style)} for ₹${p}${m.locks&&m.locks[m.style]!=null&&p<=m.locks[m.style]?" (your loyalty price)":""}.</p><button class="btn" id="us">Book my usual</button> <button class="btn" id="fg">Not me</button>`;
-$("us").onclick=()=>{cat=m.cat;sel=m.style;Object.assign(opt,m.opt||{});$("name").value=m.name;tabs();grid();opts();$("slots").scrollIntoView({behavior:"smooth"})};
+function welcome(){const m=me(),w=$("wel");if(!m){w.hidden=true;return}w.hidden=false;const ok=!hid().includes(m.style),p=ok?priceFor(m.style):0;
+w.innerHTML=`<strong>👋 Welcome back, ${esc(m.name)}!</strong>`+(ok?`<p class="sub" style="margin:4px 0 10px">Your usual: ${esc(m.style)} for ₹${p}${m.locks&&m.locks[m.style]!=null&&p<=m.locks[m.style]?" (your loyalty price)":""}.</p><button class="btn" id="us">Book my usual</button> `:`<p class="sub" style="margin:4px 0 10px">Good to see you again. Pick your cut below.</p>`)+`<button class="btn" id="fg">Not me</button>`;
+if(ok)$("us").onclick=()=>{cat=m.cat;sel=m.style;Object.assign(opt,m.opt||{});$("name").value=m.name;tabs();grid();opts();$("slots").scrollIntoView({behavior:"smooth"})};
 $("fg").onclick=()=>{S.set("rc_me",null);welcome();price();grid()}}
-function tabs(){const t=$("tabs");t.innerHTML="";[["men","Men"],["women","Women"],["kids","Kids"],["saved","Saved"]].forEach(([k,l])=>{const b=document.createElement("button");b.className="tab";b.textContent=l+" ("+(k==="saved"?favs().length:STY[k].length)+")";b.setAttribute("aria-pressed",cat===k);b.onclick=()=>{cat=k;tabs();grid()};t.appendChild(b)});
+function shop(){const c=CFG,cl=isClosed();document.title=c.name;$("h1").textContent=c.name;$("hrs").textContent="Open "+fmt(c.open)+" – "+fmt(c.close);
+const ig=$("ig");if(c.insta){ig.hidden=false;ig.textContent="Instagram @"+c.insta;ig.href="https://www.instagram.com/"+encodeURIComponent(c.insta)}else ig.hidden=true;
+$("ft").textContent=c.name+" · Open daily "+fmt(c.open)+" – "+fmt(c.close);
+const st=$("st");st.className="st "+(cl?"closed":"open");
+st.innerHTML=(cl?"<b>🔴 Sorry, the shop is closed right now</b>":"<b>🟢 We’re open!</b>")+"<span>"+(cl?"Booking is paused. ":fmt(c.open)+" – "+fmt(c.close)+". ")+esc(c.msg||"")+"</span>";
+$("book").disabled=cl;if(cl)$("book").textContent="Shop is closed";else $("book").textContent="Confirm booking";
+$("qb").disabled=cl;$("qp").textContent="Haircut price: ₹"+quickPrice()+" (final price at the shop) · "+c.gap+" minutes per customer";
+const w=String(c.wa||"").replace(/\D/g,""),wa=$("wa");if(w.length>=10){wa.hidden=false;wa.href="https://wa.me/"+(w.length===10?"91"+w:w)}else wa.hidden=true}
+const quickPrice=()=>{const b=Math.max(0,+CFG.qp||0);return CFG.fest?Math.round(b*(100-CFG.pct)/100):b};
+const rng=t=>t+" – "+fmt(mins(t)+CFG.gap);
+$("qb").onclick=async()=>{const e=$("qe");e.textContent="";
+if(!ready){e.textContent="The shop app is not connected yet.";return}
+if(isClosed()){e.textContent="The shop is closed right now. दुकान अभी बंद है।";return}
+const n=$("qn").value.trim()||"Customer",nw=new Date(),t0=nw.getHours()*60+nw.getMinutes()+10,taken=new Set(SLOT.map(x=>x.slot)),free=SL.filter(t=>!taken.has(t)&&mins(t)>=t0);
+if(!free.length){e.textContent="Sorry, no time is left today. Please come tomorrow. आज समय नहीं बचा, कल आइए।";return}
+$("qb").disabled=true;let got=null;
+for(const t of free.slice(0,6)){try{await setDoc(doc(db,"slots",sid(t)),{date:day(),slot:t,st:"waiting",walkin:false});got=t;break}catch(x){if(!navigator.onLine)break}}
+if(!got){e.textContent=!navigator.onLine?"📡 No internet. Please check your connection and try again.":"Could not get a time right now. Please try again.";$("qb").disabled=isClosed();return}
+const p=quickPrice(),tk=SLOT.length+1;
+try{await addDoc(collection(db,"bookings"),{date:day(),tk,name:n,style:"Haircut (quick booking)",cat:"men",slot:got,p,st:"waiting",opt:null,src:"app",sid:sid(got),at:serverTimestamp()})}catch(x){e.textContent="Could not finish your booking. Please try again.";$("qb").disabled=isClosed();return}
+$("qb").disabled=isClosed();
+$("tok").textContent="Token #"+tk;$("tn").textContent=n;$("ts").textContent="Haircut (tell the barber what you want)";$("to").textContent="-";$("tt").textContent=rng(got);$("tp").textContent="₹"+p+(CFG.fest?" (festival offer applied)":"");
+$("thi").textContent="आपका समय: "+rng(got)+"। कृपया इसी समय दुकान पर आइए।";
+$("ticket").classList.add("on");$("ticket").scrollIntoView({behavior:"smooth",block:"center"})};
+function tabs(){const t=$("tabs");t.innerHTML="";[["men","Men"],["women","Women"],["kids","Kids"],["saved","Saved"]].forEach(([k,l])=>{const b=document.createElement("button");b.className="tab";b.textContent=l+" ("+(k==="saved"?favs().filter(n=>!hid().includes(n)).length:VIS().filter(s=>s.cat===k).length)+")";b.setAttribute("aria-pressed",cat===k);b.onclick=()=>{cat=k;tabs();grid()};t.appendChild(b)});
 const o=document.createElement("button");o.className="tab";o.textContent="Office-ready";o.setAttribute("aria-pressed",office);o.onclick=()=>{office=!office;tabs();grid()};t.appendChild(o)}
-function grid(){const g=$("grid");g.innerHTML="";const L=cat==="saved"?ALL.filter(s=>favs().includes(s.n)):ALL.filter(s=>s.cat===cat);
+function grid(){const g=$("grid");g.innerHTML="";const L=cat==="saved"?VIS().filter(s=>favs().includes(s.n)):VIS().filter(s=>s.cat===cat);
 if(!L.length)g.innerHTML='<p class="sub">Nothing saved yet. Select a cut and tap “Save this cut”.</p>';
 L.forEach(s=>{if(office&&!s.o)return;const p=priceFor(s.n),b=document.createElement("button");b.className="card";b.setAttribute("aria-pressed",sel===s.n);
 b.innerHTML=head(s.h,s.cat,s.i,s.n)+"<div><strong>"+esc(s.n)+"</strong><span>"+esc(s.d)+"</span><span><b>₹"+p+"</b>"+(p<base(s.n)?" <s>₹"+base(s.n)+"</s>":"")+"</span></div>";
 b.onclick=()=>{sel=s.n;[...g.children].forEach(c=>c.setAttribute("aria-pressed",c===b));opts()};g.appendChild(b)})}
-function opts(){const o=$("opts");let h=`<strong>${sel?esc(sel):"Select a cut above"}</strong>`;
+function opts(){const o=$("opts");let h=`<strong>${sel?esc(sel):"Select a cut above"}</strong><div class="pvr">${[[0,"Front"],[1,"Side"],[2,"Back"]].map(([i,l])=>`<button class="pvb" data-i="${i}" aria-label="Enlarge ${l} view"><canvas id="pv${i}" width="120" height="120"></canvas><span>${l}</span></button>`).join("")}</div><p class="sub" style="font-size:.85rem;margin:0 0 4px">Guide picture. Tap one to enlarge and turn it. Your choices below change it.</p>`;
 for(const k in OPT)h+=`<label class="l" for="o_${k}">${OPT[k][0]}</label><select id="o_${k}">${OPT[k][1].map(v=>`<option${opt[k]===v?" selected":""}>${v}</option>`).join("")}</select>`;
 h+=`<label class="l" for="o_note">Anything else? (optional)</label><input type="text" id="o_note" maxlength="80" placeholder="e.g. scissors only, keep it longer on top" value="${esc(opt.note)}"><button class="btn" id="sf" style="margin-top:12px" ${sel?"":"disabled"}>${sel&&favs().includes(sel)?"★ Saved":"☆ Save this cut"}</button>`;
-o.innerHTML=h;for(const k in OPT)$("o_"+k).onchange=e=>opt[k]=e.target.value;$("o_note").oninput=e=>opt.note=e.target.value;
-$("sf").onclick=()=>{const f=favs(),i=f.indexOf(sel);i<0?f.push(sel):f.splice(i,1);S.set("rc_fav",f);tabs();opts()}}
+o.innerHTML=h;for(const k in OPT)$("o_"+k).onchange=e=>{opt[k]=e.target.value;drawPrev()};$("o_note").oninput=e=>opt.note=e.target.value;
+$("sf").onclick=()=>{const f=favs(),i=f.indexOf(sel);i<0?f.push(sel):f.splice(i,1);S.set("rc_fav",f);tabs();opts()};
+o.querySelectorAll(".pvb").forEach(b=>b.onclick=()=>openZoom(+b.dataset.i));drawPrev()}
+const curH=()=>{const s=ALL.find(x=>x.n===sel);return s?s.h:"short"};
+const ANG=[[0,0],[1.5708,0],[3.1416,0],[0,1.3]];
+function paint(cv,P,r,pt,z){const W=cv.width,H=cv.height,ctx=cv.getContext("2d"),im=ctx.createImageData(W,H);im.data.set(renderHead(W,H,P,r,pt,z));ctx.putImageData(im,0,0)}
+function drawPrev(){const P=look(curH(),opt);[0,1,2].forEach(i=>{const c=$("pv"+i);if(c)paint(c,P,ANG[i][0],ANG[i][1],1)})}
+let zr=0,zp=0,zz=1,zspin=null,zraf=0;
+function zdraw(){if(zraf)return;zraf=requestAnimationFrame(()=>{zraf=0;paint($("zc"),look(curH(),opt),zr,zp,zz)})}
+function openZoom(i){zr=ANG[i][0];zp=ANG[i][1];zz=1;$("zt").textContent=sel||"Preview";$("zm").classList.add("on");zdraw();$("zx").focus()}
+function closeZoom(){$("zm").classList.remove("on");if(zspin){clearInterval(zspin);zspin=null;$("zsp").setAttribute("aria-pressed","false")}}
+(()=>{const c=$("zc"),ptr=new Map();let pd=0;
+c.addEventListener("pointerdown",e=>{c.setPointerCapture(e.pointerId);ptr.set(e.pointerId,[e.clientX,e.clientY]);pd=0});
+c.addEventListener("pointermove",e=>{if(!ptr.has(e.pointerId))return;const o=ptr.get(e.pointerId);
+if(ptr.size===1){zr+=(e.clientX-o[0])*.012;zp=clamp(zp+(e.clientY-o[1])*.01,-.6,1.45)}
+ptr.set(e.pointerId,[e.clientX,e.clientY]);
+if(ptr.size===2){const a=[...ptr.values()],d=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);if(pd)zz=clamp(zz*d/pd,.7,2.3);pd=d}zdraw()});
+const up=e=>{ptr.delete(e.pointerId);pd=0};c.addEventListener("pointerup",up);c.addEventListener("pointercancel",up);
+c.addEventListener("wheel",e=>{e.preventDefault();zz=clamp(zz*(e.deltaY<0?1.1:.9),.7,2.3);zdraw()},{passive:false})})();
+$("zx").onclick=closeZoom;
+$("zm").querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{const a=ANG[+b.dataset.v];zr=a[0];zp=a[1];zdraw()});
+$("zin").onclick=()=>{zz=clamp(zz*1.2,.7,2.3);zdraw()};$("zout").onclick=()=>{zz=clamp(zz/1.2,.7,2.3);zdraw()};
+$("zsp").onclick=()=>{if(zspin){clearInterval(zspin);zspin=null;$("zsp").setAttribute("aria-pressed","false")}else{$("zsp").setAttribute("aria-pressed","true");zspin=setInterval(()=>{zr+=.06;zdraw()},60)}};
 
-function slots(){const s=$("slots");s.innerHTML="";const taken=SLOT.map(x=>x.slot);SL.forEach(t=>{const b=document.createElement("button");b.className="slot";b.textContent=t;b.disabled=taken.includes(t)||past(t);b.setAttribute("aria-pressed",slot===t);b.onclick=()=>{slot=t;[...s.children].forEach(c=>c.setAttribute("aria-pressed",c===b))};s.appendChild(b)})}
+
+function slots(){const s=$("slots");s.innerHTML="";const taken=SLOT.map(x=>x.slot);SL.forEach(t=>{const b=document.createElement("button");b.className="slot";b.textContent=t;b.disabled=taken.includes(t)||past(t)||isClosed();b.setAttribute("aria-pressed",slot===t);b.onclick=()=>{slot=t;[...s.children].forEach(c=>c.setAttribute("aria-pressed",c===b))};s.appendChild(b)})}
 function live(){const w=SLOT.filter(x=>x.st==="waiting").length;$("live").textContent=w?w+" in the queue right now. Crossed-out times are taken.":"No queue right now. Pick any open time, or just walk in."}
 $("book").onclick=async()=>{const n=$("name").value.trim(),e=$("err");
 if(!ready){e.textContent="The shop app is not connected yet.";return}
+if(isClosed()){e.textContent="The shop is closed right now. Please check back later.";return}
+if(sel&&hid().includes(sel)){sel=null;grid();opts();e.textContent="That cut is not available right now. Please pick another.";return}
 if(!sel){e.textContent="Please choose a cut.";return}if(!slot){e.textContent="Please pick a time.";return}if(!n){e.textContent="Please enter your name.";return}
 e.textContent="";$("book").disabled=true;
 const s=ALL.find(x=>x.n===sel),p=priceFor(sel),o={...opt},tk=SLOT.length+1;
 try{
 await setDoc(doc(db,"slots",sid(slot)),{date:day(),slot,st:"waiting",walkin:false});
 await addDoc(collection(db,"bookings"),{date:day(),tk,name:n,style:sel,cat:s.cat,slot,p,st:"waiting",opt:o,src:"app",sid:sid(slot),at:serverTimestamp()});
-}catch(x){e.textContent="That time was just taken, or you are offline. Please pick another time.";$("book").disabled=false;slot=null;slots();return}
-$("book").disabled=false;
+}catch(x){e.textContent=!navigator.onLine?"📡 No internet. Please check your connection and try again.":"That time was just taken, or the network is slow. Please pick another time.";$("book").disabled=isClosed();if(navigator.onLine){slot=null;slots()}return}
+$("book").disabled=isClosed();
 if($("rem").checked){const m=me()||{},lk=m.locks||{};lk[sel]=Math.min(base(sel),lk[sel]??Infinity);S.set("rc_me",{name:n,style:sel,cat:s.cat,opt:o,locks:lk})}
-$("tok").textContent="Token #"+tk;$("tn").textContent=n;$("ts").textContent=sel;$("to").textContent=optStr(o);$("tt").textContent=slot;$("tp").textContent="₹"+p+(CFG.fest?" (festival offer applied)":"");
+$("tok").textContent="Token #"+tk;$("tn").textContent=n;$("ts").textContent=sel;$("to").textContent=optStr(o);$("tt").textContent=rng(slot);$("thi").textContent="आपका समय: "+rng(slot)+"। कृपया इसी समय दुकान पर आइए।";$("tp").textContent="₹"+p+(CFG.fest?" (festival offer applied)":"");
 $("ticket").classList.add("on");$("ticket").scrollIntoView({behavior:"smooth",block:"center"});slot=null;slots();welcome();price();grid()};
 
 /* ---------- staff / owner ---------- */
@@ -274,23 +442,31 @@ list.forEach(b=>{const r=document.createElement("div");r.className="row "+(b.st=
 r.innerHTML=`<div><strong>#${b.tk} ${esc(b.name)}</strong>${b.src==="staff"?" (walk-in)":""}<br><span class="sub">${esc(b.style)} · ${esc(b.slot)} · ₹${b.p}<br>${esc(optStr(b.opt))}</span></div>`;
 if(b.st==="waiting"){const d=document.createElement("span");d.innerHTML='<button class="btn" data-a="done">Done</button> <button class="btn" data-a="cancelled">Cancel</button>';
 d.querySelectorAll("button").forEach(x=>x.onclick=async()=>{try{await updateDoc(doc(db,"bookings",b.id),{st:x.dataset.a});if(x.dataset.a==="done")await updateDoc(doc(db,"slots",b.sid),{st:"done"});else await deleteDoc(doc(db,"slots",b.sid))}catch(e){alert("Could not update.")}});r.appendChild(d)}ql.appendChild(r)})}
-function prices(){const pv=$("pv");let h='<p class="sub">Set the price of each cut. Changes reach every customer straight away.</p>';
-[["men","Men"],["women","Women"],["kids","Kids"]].forEach(([k,l])=>{h+=`<h2 style="font-size:1.1rem">${l}</h2>`+STY[k].map(s=>`<div class="row"><span>${esc(s.n)}</span><input type="number" min="0" step="5" style="width:96px" data-n="${esc(s.n)}" value="${base(s.n)}" aria-label="Price for ${esc(s.n)}"></div>`).join("")});
-pv.innerHTML=h+'<button class="go" id="sp">Save prices</button><p class="err" id="pe" role="status"></p>';
-$("sp").onclick=async()=>{const pr={};pv.querySelectorAll("[data-n]").forEach(i=>pr[i.dataset.n]=Math.max(0,Math.round(+i.value)));
-try{await setDoc(doc(db,"config","shop"),{prices:pr},{merge:true});$("pe").style.color="var(--brass)";$("pe").textContent="Prices saved."}catch(e){$("pe").textContent="Could not save."}}}
-function settings(){const c=CFG;$("pv").innerHTML=`<div class="box"><strong>Festival offer</strong><label class="l" for="pc">Discount (%)</label><input type="number" id="pc" min="1" max="90" value="${c.pct}"><label class="l"><input type="checkbox" id="f" ${c.fest?"checked":""}> Festival offer is ON</label><button class="go" id="sf2" style="margin-top:12px">Save offer</button></div>
-<div class="box"><strong>PINs</strong><p class="sub" style="margin:2px 0 0">The owner and staff PINs are passwords of two Firebase accounts. To change one: Firebase Console → Authentication → Users.</p></div><p class="err" id="se" role="status"></p>`;
-$("sf2").onclick=async()=>{try{await setDoc(doc(db,"config","shop"),{pct:Math.min(90,Math.max(1,+$("pc").value||c.pct)),fest:$("f").checked},{merge:true});$("se").textContent="Saved."}catch(e){$("se").textContent="Could not save."}}}
+function prices(){const pv=$("pv");let h='<p class="sub">Set the price of each cut and choose which cuts customers can see. Changes reach every customer straight away.</p>';
+[["men","Men"],["women","Women"],["kids","Kids"]].forEach(([k,l])=>{h+=`<h2 style="font-size:1.1rem">${l}</h2>`+STY[k].map(s=>`<div class="row"><span>${esc(s.n)}</span><span style="display:flex;gap:10px;align-items:center"><label style="font-size:.85rem;white-space:nowrap"><input type="checkbox" data-v="${esc(s.n)}" ${hid().includes(s.n)?"":"checked"} aria-label="Show ${esc(s.n)} to customers"> Show</label><input type="number" min="0" step="5" style="width:84px" data-n="${esc(s.n)}" value="${base(s.n)}" aria-label="Price for ${esc(s.n)}"></span></div>`).join("")});
+pv.innerHTML=h+'<button class="go" id="sp">Save prices and visibility</button><p class="err" id="pe" role="status"></p>';
+$("sp").onclick=async()=>{const pr={},hd=[];pv.querySelectorAll("[data-n]").forEach(i=>pr[i.dataset.n]=Math.max(0,Math.round(+i.value)));pv.querySelectorAll("[data-v]").forEach(i=>{if(!i.checked)hd.push(i.dataset.v)});
+try{await setDoc(doc(db,"config","shop"),{prices:pr,hidden:hd},{merge:true});say("pe","Saved.",1)}catch(e){say("pe","Could not save. Check your connection.")}}}
+function settings(){const c=CFG,tm=v=>{let o="";for(let m=360;m<=1380;m+=30)o+=`<option value="${m}"${m===v?" selected":""}>${fmt(m)}</option>`;return o},sm=(v,t)=>`<option value="${v}"${c.mode===v?" selected":""}>${t}</option>`;
+$("pv").innerHTML=`<div class="box"><strong>Shop status</strong><p class="sub" style="margin:2px 0 0">Customers see this at the top of the app.</p><label class="l" for="ms">Status</label><select id="ms">${sm("open","Open (normal)")}${sm("today","Closed for today only (reopens tomorrow)")}${sm("hold","Closed until I reopen")}</select><label class="l" for="mg">Message for customers (optional)</label><input type="text" id="mg" maxlength="80" placeholder="e.g. Back tomorrow at 9 AM" value="${esc(c.msg||"")}"><button class="go" id="s1" style="margin-top:12px">Save status</button><p class="err" id="e1" role="status"></p></div>
+<div class="box"><strong>Shop details</strong><label class="l" for="sn">Shop name</label><input type="text" id="sn" maxlength="40" value="${esc(c.name)}"><label class="l" for="si">Instagram username (without @, leave empty to hide)</label><input type="text" id="si" maxlength="30" value="${esc(c.insta||"")}"><label class="l" for="sw">WhatsApp number (digits only, leave empty to hide)</label><input type="text" id="sw" inputmode="tel" maxlength="15" value="${esc(c.wa||"")}"><label class="l" for="sq">Haircut price for the quick “Get my time” button (₹)</label><input type="number" id="sq" min="0" max="5000" value="${c.qp}"><label class="l" for="sg">Time for each customer</label><select id="sg">${[15,20,30].map(v=>`<option value="${v}"${c.gap===v?" selected":""}>${v} minutes</option>`).join("")}</select><label class="l" for="so">Opening time</label><select id="so">${tm(c.open)}</select><label class="l" for="sc">Closing time</label><select id="sc">${tm(c.close)}</select><button class="go" id="s2" style="margin-top:12px">Save details</button><p class="err" id="e2" role="status"></p></div>
+<div class="box"><strong>Festival offer</strong><label class="l" for="pc">Discount (%)</label><input type="number" id="pc" min="1" max="90" value="${c.pct}"><label class="l"><input type="checkbox" id="f" ${c.fest?"checked":""}> Festival offer is ON</label><button class="go" id="sf2" style="margin-top:12px">Save offer</button><p class="err" id="se" role="status"></p></div>
+<div class="box"><strong>PINs</strong><p class="sub" style="margin:2px 0 0">The owner and staff PINs are passwords of two Firebase accounts. To change one: Firebase Console → Authentication → Users.</p></div>`;
+$("s1").onclick=async()=>{const mode=$("ms").value;try{await setDoc(doc(db,"config","shop"),{mode,closedOn:mode==="today"?day():"",msg:$("mg").value.trim().slice(0,80)},{merge:true});say("e1","Saved. Customers see it now.",1)}catch(e){say("e1","Could not save. Check your connection.")}};
+$("s2").onclick=async()=>{const name=$("sn").value.trim().slice(0,40),insta=$("si").value.trim().replace(/^@/,"").replace(/[^A-Za-z0-9._]/g,"").slice(0,30),o=+$("so").value,cl=+$("sc").value,wa=$("sw").value.replace(/\D/g,""),qp=Math.round(+$("sq").value),gap=+$("sg").value;
+if(!name){say("e2","Please enter a shop name.");return}if(cl-o<60){say("e2","Closing time must be at least 1 hour after opening.");return}if(wa&&(wa.length<10||wa.length>15)){say("e2","WhatsApp number must be 10 digits (or leave it empty).");return}if(!(qp>=0&&qp<=5000)){say("e2","Enter a valid price.");return}
+try{await setDoc(doc(db,"config","shop"),{name,insta,open:o,close:cl,wa,qp,gap},{merge:true});say("e2","Saved.",1)}catch(e){say("e2","Could not save. Check your connection.")}};
+$("sf2").onclick=async()=>{try{await setDoc(doc(db,"config","shop"),{pct:Math.min(90,Math.max(1,+$("pc").value||c.pct)),fest:$("f").checked},{merge:true});say("se","Saved.",1)}catch(e){say("se","Could not save. Check your connection.")}}}
 
 async function start(){
-if(!ready){$("live").textContent="Setup needed: add your Firebase keys in index.html (see README).";return}
+if(!ready){RCN.ok=true;$("live").textContent="Setup needed: add your Firebase keys in index.html (see README).";return}
 const app=initializeApp(FIREBASE);db=getFirestore(app);auth=getAuth(app);
 await signInAnonymously(auth).catch(()=>{});
-onSnapshot(doc(db,"config","shop"),s=>{if(s.exists())CFG={...CFG,...s.data()};price();grid();opts();welcome()});
-onSnapshot(query(collection(db,"slots"),where("date","==",day())),s=>{SLOT=s.docs.map(d=>({id:d.id,...d.data()}));slots();live()})}
+onSnapshot(doc(db,"config","shop"),s=>{if(s.exists())CFG={...CFG,...s.data()};CFG.open=+CFG.open||540;CFG.close=+CFG.close||1020;CFG.gap=[15,20,30].includes(+CFG.gap)?+CFG.gap:15;CFG.qp=Number.isFinite(+CFG.qp)?+CFG.qp:50;if(CFG.close-CFG.open<60){CFG.open=540;CFG.close=1020}if(!Array.isArray(CFG.hidden))CFG.hidden=[];CFG.name=String(CFG.name||"Rameshwar Cuts & Co.");
+if(sel&&hid().includes(sel))sel=null;buildSL();if(slot&&!SL.includes(slot))slot=null;RCN.ok=true;RCN.set("slow",0);RCN.set("srv",0);shop();price();tabs();grid();opts();slots();welcome()},()=>RCN.set("srv",1));
+onSnapshot(query(collection(db,"slots"),where("date","==",day())),s=>{SLOT=s.docs.map(d=>({id:d.id,...d.data()}));slots();live()},()=>RCN.set("srv",1))}
 $("live").textContent="Checking availability…";
-price();tabs();grid();opts();slots();welcome();start();
+shop();price();tabs();grid();opts();slots();welcome();start();
 </script>
 </body>
 </html>
